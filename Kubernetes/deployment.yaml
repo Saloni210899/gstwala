@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gstwala-app-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gstwala-app
+  template:
+    metadata:
+      labels:
+        app: gstwala-app
+    spec:
+      containers:
+      - name: gstwala-app
+        image: gstwala-server/gstwala-app
+        ports:
+        - containerPort: 8000
