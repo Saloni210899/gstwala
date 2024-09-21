@@ -8,11 +8,16 @@ COPY . .
  
 # Step 4: Install the dependencies
 RUN pip install -r requirements.txt
+RUN  python manage.py makemigrations
+RUN  python manage.py migrate
+RUN python manage.py runserver
+
+
  
 # Step 5: Expose the port on which the app runs
 EXPOSE 8000
  
 # Step 6: Start the Django app
-CMD ["python", "manage.py", "runserver", "127.0.0.1:8000"]
+CMD ["python", "manage.py", "runserver"]
  
  
