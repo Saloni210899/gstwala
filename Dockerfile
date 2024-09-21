@@ -8,6 +8,7 @@ COPY . .
  
 # Step 4: Install the dependencies
 RUN pip install -r requirements.txt
+RUN  source env/scripts/activate
 RUN  python manage.py makemigrations
 RUN  python manage.py migrate
 
