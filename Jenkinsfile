@@ -137,7 +137,7 @@ pipeline {
             dir('gstwala') {
                 // Login to Docker Hub using --password-stdin
                 bat '''
-                echo %DOCKERHUB_CREDENTIALS_PSW% | docker login -u %DOCKERHUB_CREDENTIALS_USR% --password-stdin
+                echo Intel@123 | docker login -u saloni098 --password-stdin
                 '''
                 bat 'docker tag saloni098/gstwala-app:1.0 %DOCKERHUB_CREDENTIALS_USR%/gstwala-app:1.0'
                 bat 'docker push saloni098/gstwala-app:1.0'
