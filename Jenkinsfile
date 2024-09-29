@@ -90,10 +90,10 @@ pipeline {
                 script {
                     dir('gstwala') {
                         powershell '''
-                        python -m venv myenv  // Use python instead of python3
-                        .\\myenv\\Scripts\\Activate.bat
-                        pip install Django
-                        python manage.py test
+                        py -m venv myenv  // Create virtual environment
+                        .\\myenv\\Scripts\\Activate.bat  // Activate virtual environment
+                        pip install Django  // Install Django
+                        py manage.py test  // Run tests
                         '''
                     }
                 }
