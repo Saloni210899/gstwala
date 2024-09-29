@@ -19,7 +19,7 @@
 # CMD ["python", "manage.py", "runserver"]
 
 # Use a specific Python base image
-FROM python:3.9-slim
+FROM python:3.12.3
 
 # Set the working directory
 WORKDIR /app
@@ -27,18 +27,20 @@ WORKDIR /app
 # Copy requirements.txt first to leverage Docker caching
 COPY requirements.txt .
 
-# Install system dependencies and Python packages
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends gcc libpq-dev && \
-    pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    apt-get purge -y --auto-remove gcc libpq-dev && \
-    rm -rf /var/lib/apt/lists/*
+# Update package list
+RUN apt-get update && echo "Updated package list"
+
+# Install system dependencies
+RUN apt-get install -y --no-install-recommends gcc libpq-dev && echo "Installed system dependencies"
+
+# Upgrade pip
+RUN pip install --upgrade pip && echo "Upgraded pip"
+
+# Install Python packages
+RUN pip install -r requirements.txt && echo "Installed Python packages"
 
 # Copy the rest of your application code
 COPY . .
 
 # Command to run the application (adjust as needed)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-
- 
