@@ -48,6 +48,7 @@
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 ## ---- D2 ---- ##
 # Use a specific Python base image
+# Use a specific Python base image
 FROM python:3.12.3
 
 # Set the working directory
@@ -68,14 +69,19 @@ RUN pip install -r requirements.txt && echo "Installed Python packages"
 # Copy the rest of your application code
 COPY . .
 
-# Create and activate a virtual environment
-RUN python -m venv /opt/venv
-
-# Activate virtual environment and install Gunicorn
-RUN /bin/bash -c "source /opt/venv/bin/activate && pip install gunicorn && python manage.py makemigrations && python manage.py migrate"
+# Run migrations
+RUN python manage.py makemigrations
+RUN python manage.py migrate
 
 # Expose the port on which the app runs
 EXPOSE 8000
+
+# Install Gunicorn
+RUN pip install gunicorn
+
+# Command to run the application using Gunicorn
+CMD ["gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
+
 
 # Command to run the application using Gunicorn
 CMD ["/opt/venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
