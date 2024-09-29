@@ -80,9 +80,9 @@ EXPOSE 8000
 RUN pip install gunicorn
 
 # Command to run the application using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
+# CMD ["gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
 
 
 # Command to run the application using Gunicorn
-# CMD ["/opt/venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
+ CMD ["/opt/venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
 
