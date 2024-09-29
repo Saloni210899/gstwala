@@ -18,25 +18,30 @@
 # # Step 6: Start the Django app
 # CMD ["python", "manage.py", "runserver"]
 
-# Use an appropriate base image
-FROM python:3.9
+# Use a specific Python base image
+FROM python:3.9-slim
 
 # Set the working directory
 WORKDIR /app
 
-# Copy the requirements file and install dependencies
+# Copy requirements.txt first to leverage Docker caching
 COPY requirements.txt .
-RUN pip install -r requirements.txt
+
+# Install dependencies
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    libpq-dev \
+    && pip install --upgrade pip \
+    && pip install -r requirements.txt \
+    && apt-get purge -y --auto-remove gcc libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
 
 # Copy the rest of your application code
 COPY . .
 
-# Run migrations directly using the virtual environment's Python
-RUN ./env/Scripts/python manage.py makemigrations
-RUN ./env/Scripts/python manage.py migrate
-
 # Command to run the application (adjust as needed)
-CMD ["./env/Scripts/python", "manage.py", "runserver", "0.0.0.0:8000"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
 
  
  
