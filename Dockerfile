@@ -27,14 +27,13 @@ WORKDIR /app
 # Copy requirements.txt first to leverage Docker caching
 COPY requirements.txt .
 
-# Install dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    gcc \
-    libpq-dev \
-    && pip install --upgrade pip \
-    && pip install -r requirements.txt \
-    && apt-get purge -y --auto-remove gcc libpq-dev \
-    && rm -rf /var/lib/apt/lists/*
+# Install system dependencies and Python packages
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends gcc libpq-dev && \
+    pip install --upgrade pip && \
+    pip install -r requirements.txt && \
+    apt-get purge -y --auto-remove gcc libpq-dev && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy the rest of your application code
 COPY . .
@@ -42,6 +41,4 @@ COPY . .
 # Command to run the application (adjust as needed)
 CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 
-
- 
  
