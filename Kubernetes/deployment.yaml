@@ -1,19 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gstwala-app-deployment
+  name: gstwala-deployment
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: gstwala-app
+      app: gstwala
   template:
     metadata:
       labels:
-        app: gstwala-app
+        app: gstwala
     spec:
       containers:
-      - name: gstwala-app
-        image: gstwala-server/gstwala-app
-        ports:
-        - containerPort: 8000
+        - name: gstwala
+          image: saloni098/gstwala-app:1.0
+          ports:
+            - containerPort: 8000
+          resources:
+            limits:
+              memory: "256Mi"
+              cpu: "500m"
+          command: ["/opt/venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
+
