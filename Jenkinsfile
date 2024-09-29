@@ -132,19 +132,19 @@ pipeline {
         }
 
         stage('Push') {
-    steps {
-        script {
-            dir('gstwala') {
-                // Login to Docker Hub using --password-stdin
-                bat '''
-                echo Intel@123 | docker login -u saloni098 --password-stdin
-                '''
-                bat 'docker tag saloni098/gstwala-app:1.0 saloni098/gstwala-app:1.0'
-                bat 'docker push saloni098/gstwala-app:1.0'
+            steps {
+                script {
+                    dir('gstwala') {
+                        // Directly login to Docker Hub with username and password
+                        bat '''
+                        docker login -u saloni098 -p "Intel@123"
+                        '''
+                        bat 'docker tag saloni098/gstwala-app:1.0 saloni098/gstwala-app:1.0'
+                        bat 'docker push saloni098/gstwala-app:1.0'
+                    }
+                }
             }
         }
-    }
-}
 
     }
 }
