@@ -91,6 +91,10 @@ pipeline {
                     dir('gstwala') {
                         powershell '''
                         py -m venv myenv  // Create virtual environment
+                        if (!(Test-Path .\\myenv\\Scripts\\Activate.bat)) {
+                            Write-Host "Virtual environment activation script not found!"
+                            exit 1
+                        }
                         .\\myenv\\Scripts\\Activate.bat  // Activate virtual environment
                         pip install Django  // Install Django
                         py manage.py test  // Run tests
