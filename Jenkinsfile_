@@ -1,0 +1,60 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+       // KUBECONFIG = credentials('kubeconfig')
+    }
+    stages {
+        stage('Checkout') {
+            steps {
+                script {
+                    sh 'rm -rf gstwala'
+                    sh 'git clone -b dev https://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@github.com/Saloni210899/gstwala.git'
+                    sh 'ls -ltr'
+                // Pull files from GitHub repository
+                //git url: 'https://github.com/Saloni210899/gstwala.git', branch: 'dev'
+                }    
+            }
+        }
+        stage('Build') {
+            steps {
+               script {
+                    dir ('gstwala'){
+               sh 'ls -ltr'
+                 sh 'docker build -t saloni098/gstwala-app:1.0 .'
+            }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script{
+                    dir ('gstwala'){
+                        sh '''
+                        python3 -m venv myenv
+                        . myenv/bin/activate
+                        pip install Django
+                        python3 manage.py test
+                        '''
+            }
+            }
+            }
+        }
+
+        stage('Push') {
+            steps {
+                script {
+                    dir ('gstwala'){
+                    sh 'docker login -u $DOCKERHUB_CREDENTIALS_USR -p $DOCKERHUB_CREDENTIALS_PSW'
+                    sh 'docker tag gstwala-app $DOCKERHUB_CREDENTIALS_USR/gstwala-app'
+                    sh 'docker push saloni098/gstwala-app:1.0'
+                }
+                }
+            }
+        }
+
+        
+    }
+ }
