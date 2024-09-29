@@ -90,12 +90,13 @@ pipeline {
                 script {
                     dir('gstwala') {
                         powershell '''
-                        # Set the path for Python installation
-                        $env:PATH = "C:\\Users\\ronit\\AppData\\Local\\Programs\\Python\\Python312;${env:PATH}"
+                        # Set the Python executable path explicitly
+                        $pythonPath = "C:\\Users\\ronit\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+                        $pipPath = "C:\\Users\\ronit\\AppData\\Local\\Programs\\Python\\Python312\\Scripts\\pip.exe"
 
                         # Create virtual environment
                         Write-Host "Creating virtual environment..."
-                        py -m venv myenv  
+                        & $pythonPath -m venv myenv  
                         if ($LASTEXITCODE -ne 0) { 
                             Write-Host "Failed to create virtual environment." 
                             exit 1 
@@ -111,7 +112,7 @@ pipeline {
 
                         # Install Django
                         Write-Host "Installing Django..."
-                        .\\myenv\\Scripts\\pip install Django  
+                        & $pipPath install Django  
                         if ($LASTEXITCODE -ne 0) { 
                             Write-Host "Failed to install Django." 
                             exit 1 
@@ -119,7 +120,7 @@ pipeline {
 
                         # Run tests
                         Write-Host "Running tests..."
-                        .\\myenv\\Scripts\\py manage.py test  
+                        & $pythonPath manage.py test  
                         if ($LASTEXITCODE -ne 0) { 
                             Write-Host "Tests failed." 
                             exit 1 
