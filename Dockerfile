@@ -76,8 +76,7 @@ COPY . .
 RUN python -m venv env && echo "Created virtual environment"
 
 # Activate the virtual environment and run migrations
-RUN . env/Scripts/activate && pip install Django && python manage.py makemigrations && python manage.py migrate
+RUN /bin/bash -c "source env/bin/activate && pip install Django && python manage.py makemigrations && python manage.py migrate"
 
 # Command to run the application
-CMD ["env/Scripts/python", "manage.py", "runserver", "0.0.0.0:8000"]
-
+CMD ["env/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
