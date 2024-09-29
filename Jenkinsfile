@@ -90,15 +90,40 @@ pipeline {
                 script {
                     dir('gstwala') {
                         powershell '''
-                        $pythonPath = "C:\\Users\\ronit\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
-                        & $pythonPath -m venv myenv  // Create virtual environment
-                        if (!(Test-Path .\\myenv\\Scripts\\Activate.bat)) {
-                            Write-Host "Virtual environment activation script not found!"
-                            exit 1
+                        # Set the path for Python installation
+                        $env:PATH = "C:\\Users\\ronit\\AppData\\Local\\Programs\\Python\\Python312;${env:PATH}"
+
+                        # Create virtual environment
+                        Write-Host "Creating virtual environment..."
+                        py -m venv myenv  
+                        if ($LASTEXITCODE -ne 0) { 
+                            Write-Host "Failed to create virtual environment." 
+                            exit 1 
                         }
-                        .\\myenv\\Scripts\\Activate.bat  // Activate virtual environment
-                        pip install Django  // Install Django
-                        & $pythonPath manage.py test  // Run tests
+
+                        # Activate virtual environment
+                        Write-Host "Activating virtual environment..."
+                        .\\myenv\\Scripts\\Activate.bat  
+                        if ($LASTEXITCODE -ne 0) { 
+                            Write-Host "Failed to activate virtual environment." 
+                            exit 1 
+                        }
+
+                        # Install Django
+                        Write-Host "Installing Django..."
+                        .\\myenv\\Scripts\\pip install Django  
+                        if ($LASTEXITCODE -ne 0) { 
+                            Write-Host "Failed to install Django." 
+                            exit 1 
+                        }
+
+                        # Run tests
+                        Write-Host "Running tests..."
+                        .\\myenv\\Scripts\\py manage.py test  
+                        if ($LASTEXITCODE -ne 0) { 
+                            Write-Host "Tests failed." 
+                            exit 1 
+                        }
                         '''
                     }
                 }
