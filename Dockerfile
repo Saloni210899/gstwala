@@ -57,27 +57,26 @@ WORKDIR /app
 # Copy requirements.txt first to leverage Docker caching
 COPY requirements.txt .
 
-# Update package list and install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev && echo "Installed system dependencies"
+# Update package list
+RUN apt-get update && echo "Updated package list"
+
+# Install system dependencies
+RUN apt-get install -y --no-install-recommends gcc libpq-dev && echo "Installed system dependencies"
 
 # Upgrade pip
 RUN pip install --upgrade pip && echo "Upgraded pip"
 
-# Install Python packages from requirements.txt
+# Install Python packages
 RUN pip install -r requirements.txt && echo "Installed Python packages"
 
 # Copy the rest of your application code
 COPY . .
 
-# Create and activate a virtual environment
-RUN python -m venv /opt/venv
+# Create a virtual environment
+RUN python -m venv env && echo "Created virtual environment"
 
-# Activate virtual environment and install additional dependencies
-RUN /bin/bash -c "source /opt/venv/bin/activate && pip install gunicorn && python manage.py makemigrations && python manage.py migrate"
+# Activate the virtual environment and run migrations
+RUN /bin/bash -c "source env/bin/activate && pip install Django && python manage.py makemigrations && python manage.py migrate"
 
-# Expose the port on which the app runs
-EXPOSE 8000
-
-# Command to run the application using Gunicorn
-CMD ["/opt/venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
-
+# Command to run the application
+CMD ["env/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
