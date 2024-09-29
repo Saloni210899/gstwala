@@ -92,12 +92,20 @@ pipeline {
                         powershell '''
                         $pythonPath = "C:\\Users\\ronit\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
                         & $pythonPath -m venv myenv  // Create virtual environment
+
                         if (!(Test-Path .\\myenv\\Scripts\\Activate.bat)) {
                             Write-Host "Virtual environment activation script not found!"
                             exit 1
                         }
-                        .\\myenv\\Scripts\\Activate.bat  // Activate virtual environment
-                        pip install Django  // Install Django
+                        
+                        // Activate the virtual environment
+                        & .\\myenv\\Scripts\\Activate.bat  
+
+                        // Install Django using pip from the virtual environment
+                        $pipPath = ".\\myenv\\Scripts\\pip.exe"
+                        & $pipPath install Django  // Install Django
+
+                        // Run tests
                         & $pythonPath manage.py test  // Run tests
                         '''
                     }
@@ -118,4 +126,5 @@ pipeline {
         }
     }
 }
+
 
