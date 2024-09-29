@@ -90,14 +90,15 @@ pipeline {
                 script {
                     dir('gstwala') {
                         powershell '''
-                        py -m venv myenv  // Create virtual environment
+                        $pythonPath = "C:\\Users\\ronit\\AppData\\Local\\Programs\\Python\\Python312\\python.exe"
+                        & $pythonPath -m venv myenv  // Create virtual environment
                         if (!(Test-Path .\\myenv\\Scripts\\Activate.bat)) {
                             Write-Host "Virtual environment activation script not found!"
                             exit 1
                         }
                         .\\myenv\\Scripts\\Activate.bat  // Activate virtual environment
                         pip install Django  // Install Django
-                        py manage.py test  // Run tests
+                        & $pythonPath manage.py test  // Run tests
                         '''
                     }
                 }
@@ -117,3 +118,4 @@ pipeline {
         }
     }
 }
+
