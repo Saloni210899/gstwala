@@ -33,8 +33,7 @@ pipeline {
                     dir('gstwala') {
                         powershell '''
                         python3 -m venv myenv
-                       //.\\myenv\\Scripts\\Activate.ps1
-                       .\myenv\Scripts\Activate.ps1
+                       .\\myenv\\Scripts\\Activate.bat
                         pip install Django
                         python manage.py test
                         '''
