@@ -70,13 +70,11 @@ COPY . .
 # Install Gunicorn for production
 RUN pip install gunicorn
 
-# Run Django migrations
-RUN python manage.py makemigrations && python manage.py migrate
-
 # Expose the port your app will run on
 EXPOSE 8000
 
 # Command to run the application using Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
+
 
 
