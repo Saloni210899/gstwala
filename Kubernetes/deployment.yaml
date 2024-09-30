@@ -18,8 +18,11 @@ spec:
           ports:
             - containerPort: 8000
           resources:
-            limits:
+            requests:
               memory: "256Mi"
               cpu: "500m"
-          command: ["/opt/venv/bin/gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
+            limits:
+              memory: "512Mi"
+              cpu: "1"
+
 
