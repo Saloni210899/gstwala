@@ -18,9 +18,8 @@
 # # Step 6: Start the Django app
 # CMD ["python", "manage.py", "runserver"]
 
-
-## --- D2 ----##
-# # Use a specific Python base image
+# D2 START
+# Use a specific Python base image
 # FROM python:3.12.3
 
 # # Set the working directory
@@ -46,9 +45,8 @@
 
 # # Command to run the application (adjust as needed)
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
-## ---- D2 ---- ##
-# Use a specific Python base image
-# Use a specific Python base image
+# D2 END
+
 # Use a specific Python base image
 FROM python:3.12.3
 
@@ -56,7 +54,7 @@ FROM python:3.12.3
 WORKDIR /app
 
 # Copy requirements.txt first to leverage Docker caching
-COPY requirements.txt .
+COPY requirements.txt . 
 
 # Update package list and install system dependencies
 RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev
@@ -70,11 +68,12 @@ COPY . .
 # Install Gunicorn for production
 RUN pip install gunicorn
 
+# Run Django migrations
+RUN python manage.py makemigrations && python manage.py migrate
+
 # Expose the port your app will run on
 EXPOSE 8000
 
 # Command to run the application using Gunicorn
 CMD ["gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
-
-
 
