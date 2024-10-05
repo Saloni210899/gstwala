@@ -47,34 +47,36 @@
 # # Command to run the application (adjust as needed)
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
 ## ---- D2 ---- ##
-# Use a specific Python base image
-# Use a specific Python base image
+
 # Use a specific Python base image
 FROM python:3.12.3
 
-# Set the working directory inside the container
+# Set the working directory
 WORKDIR /app
 
 # Copy requirements.txt first to leverage Docker caching
 COPY requirements.txt .
 
-# Update package list and install system dependencies
-RUN apt-get update && apt-get install -y --no-install-recommends gcc libpq-dev
+# Update package list
+RUN apt-get update && echo "Updated package list"
 
-# Upgrade pip and install Python packages
-RUN pip install --upgrade pip && pip install -r requirements.txt
+# Install system dependencies
+RUN apt-get install -y --no-install-recommends gcc libpq-dev && echo "Installed system dependencies"
+
+# Upgrade pip
+RUN pip install --upgrade pip && echo "Upgraded pip"
+
+# Install Python packages
+RUN pip install -r requirements.txt && echo "Installed Python packages"
 
 # Copy the rest of your application code
 COPY . .
 
-# Install Gunicorn for production
-RUN pip install gunicorn
+# Create a virtual environment
+RUN python -m venv env && echo "Created virtual environment"
 
-# Expose the port your app will run on
-EXPOSE 8000
+# Activate the virtual environment and run migrations
+RUN /bin/bash -c "source env/bin/activate && pip install Django && python manage.py makemigrations && python manage.py migrate"
 
-# Command to run the application using Gunicorn
-CMD ["gunicorn", "--bind", "0.0.0.0:8000", "gstwala.wsgi:application"]
-
-
-
+# Command to run the application
+CMD ["env/bin/python", "manage.py", "runserver", "0.0.0.0:8000"]
