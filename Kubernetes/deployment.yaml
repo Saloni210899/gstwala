@@ -13,27 +13,7 @@ spec:
         app: gstwala
     spec:
       containers:
-        - name: gstwala
-          image: saloni098/gstwala-app:1.0
-          ports:
-            - containerPort: 8000
-          resources:
-            requests:
-              memory: "256Mi"
-              cpu: "500m"
-            limits:
-              memory: "512Mi"
-              cpu: "1"
-          env:
-            - name: DJANGO_SETTINGS_MODULE
-              value: "gstwala.settings"
-      initContainers:
-        - name: migrate
-          image: saloni098/gstwala-app:1.0
-          command: ["python", "manage.py", "migrate"]
-          env:
-            - name: DJANGO_SETTINGS_MODULE
-              value: "gstwala.settings"
-
-
-
+      - name: gstwala
+        image: saloni098/gstwala-app:1.0  # Your Docker image
+        ports:
+        - containerPort: 8000
